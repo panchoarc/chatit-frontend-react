@@ -2,16 +2,14 @@ import ChatHeader from "@/features/chat/components/ChatHeader";
 import ChatInput from "@/features/chat/components/ChatInput";
 import ChatMessages from "@/features/chat/components/ChatMessages";
 import { useChatMessages } from "@/features/chat/hooks/useChatMessages";
-import { getCurrentUserIdFromToken } from "@/features/chat/utils/CurrentUser";
 import type { Chat } from "@/features/chat/types/types";
 
-import { type FC } from "react";
 import { useChatMembers } from "@/features/chat/hooks/useChatMembers";
+import { type FC } from "react";
 
-type ChatWindowProps = { chat: Chat };
+type ChatWindowProps = { chat: Chat; currentUserId: string };
 
-const ChatWindow: FC<ChatWindowProps> = ({ chat }) => {
-  const currentUserId = getCurrentUserIdFromToken();
+const ChatWindow: FC<ChatWindowProps> = ({ chat, currentUserId }) => {
   const { messages, sendChatMessage, loadOlderMessages, hasMore } =
     useChatMessages(chat.id, currentUserId);
 

@@ -2,10 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import WebSocketClient from "@/features/chat/config/WebSocketClient";
 import ConversationService from "@/features/chat/services/ConversationService";
 import type { Chat } from "@/features/chat/types/types";
+import { useChatContext } from "@/features/chat/context/ChatContext";
+import { useNotificationSound } from "./useNotificationSound";
 
-export const useChatList = () => {
+export const useChatList = (currentUserId: string) => {
+  const { playSound } = useNotificationSound();
+  const { activeChat } = useChatContext();
   const [chatList, setChatList] = useState<Chat[]>([]);
-  const [activeChat, setActiveChat] = useState<Chat | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -58,6 +61,9 @@ export const useChatList = () => {
     WebSocketClient.subscribe(
       "/user/queue/chat-updates",
       (msg: { chatId: number; lastMessage: string; unreadCount: number }) => {
+        console.log("🔔 Mensaje recibido:", msg);
+        console.log("senderId:", msg.lastMessage.senderId);
+        console.log("currentUserId:", currentUserId);
         setChatList((prevList) => {
           const updated = prevList.map((chat) =>
             chat.id === msg.chatId
@@ -76,10 +82,11 @@ export const useChatList = () => {
         });
 
         // 🔊 Solo reproducir si el mensaje es de un chat que no está activo
-        if (msg.chatId !== activeChat?.id) {
-          audioRef.current?.play().catch((err) => {
-            console.error("No se pudo reproducir el sonido:", err);
-          });
+        if (
+          msg.chatId !== activeChat?.id &&
+          msg.lastMessage.senderId !== currentUserId
+        ) {
+          playSound();
         }
       }
     );
@@ -107,7 +114,6 @@ export const useChatList = () => {
   return {
     chatList,
     activeChat,
-    setActiveChat,
     handleMarkAsRead,
   };
 };

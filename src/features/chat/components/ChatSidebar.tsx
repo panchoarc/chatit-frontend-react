@@ -1,23 +1,23 @@
 import ChatList from "@/features/chat/components/ChatList";
 import ChatSidebarHeader from "@/features/chat/components/ChatSidebarHeader";
 import type { Chat } from "@/features/chat/types/types";
+import { useChatContext } from "@/features/chat/context/ChatContext";
 
 type ChatSidebarProps = {
   chatList: Chat[];
   activeChat: Chat | null;
-  onChatSelected: (chat: Chat) => void;
   onMarkAsRead: (chatId: number) => void;
 };
 
 const ChatSidebar = ({
   chatList,
   activeChat,
-  onChatSelected,
   onMarkAsRead,
 }: ChatSidebarProps) => {
+  const { setActiveChat } = useChatContext();
   const handleSelect = (chat: Chat) => {
     if (!activeChat || activeChat.id !== chat.id) {
-      onChatSelected(chat);
+      setActiveChat(chat);
       onMarkAsRead(chat.id);
     }
   };

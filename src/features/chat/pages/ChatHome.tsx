@@ -1,20 +1,22 @@
 import ChatSidebar from "@/features/chat/components/ChatSidebar";
 import ChatWindow from "@/features/chat/components/ChatWindow";
 import { useChatList } from "@/features/chat/hooks/useChatList";
+import { getCurrentUserIdFromToken } from "../utils/CurrentUser";
 
 const ChatHome = () => {
-  const { chatList, activeChat, setActiveChat, handleMarkAsRead } =
-    useChatList();
+  const currentUserId = getCurrentUserIdFromToken();
+  const { chatList, activeChat, handleMarkAsRead } = useChatList(currentUserId);
 
   return (
     <div className="h-full lg:w-4/5 mx-auto flex py-3">
       <ChatSidebar
         chatList={chatList}
         activeChat={activeChat}
-        onChatSelected={setActiveChat}
         onMarkAsRead={handleMarkAsRead}
       />
-      {activeChat && <ChatWindow chat={activeChat} />}
+      {activeChat && (
+        <ChatWindow chat={activeChat} currentUserId={currentUserId} />
+      )}
     </div>
   );
 };
