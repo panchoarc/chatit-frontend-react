@@ -36,7 +36,6 @@ const ChatInput = ({
     if (!trimmed) return;
 
     const message: OutgoingMessage = {
-      chatId,
       content: trimmed,
       senderId: currentUserId,
       type: "TEXT",

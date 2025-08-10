@@ -11,7 +11,6 @@ type Message = {
 };
 
 export type OutgoingMessage = {
-  chatId: number;
   content: string;
   senderId: string;
   type: "TEXT" | "IMAGE" | "FILE" | "SYSTEM";

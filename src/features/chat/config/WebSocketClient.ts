@@ -4,10 +4,11 @@ import { Client } from "@stomp/stompjs";
 let isConnectedPromise: Promise<void> | null = null;
 let resolveConnected: (() => void) | null = null;
 let currentToken: string | null = null;
+let pingIntervalId: number | null = null;
 
 type SubscriptionEntry = {
   stompSubscription: any;
-  callback: Function;
+  callback: any;
 };
 
 const subscriptions: Record<string, SubscriptionEntry> = {};
@@ -29,7 +30,7 @@ const client = new Client({
   },
 
   debug: (msg: string) => {
-    if (import.meta.env.DEV) {
+    if (!import.meta.env.DEV) {
       console.log("[STOMP DEBUG]", msg);
     }
   },
@@ -45,6 +46,18 @@ const client = new Client({
       subscriptions[destination].stompSubscription = stompSubscription;
     });
 
+    // Empieza a enviar pings cada 25 segundos (menos que el TTL)
+    if (pingIntervalId) clearInterval(pingIntervalId);
+    pingIntervalId = window.setInterval(() => {
+      if (client.connected) {
+        client.publish({
+          destination: "/app/ping",
+          body: "",
+        });
+        console.log("💓 Ping enviado");
+      }
+    }, 25000);
+
     if (resolveConnected) resolveConnected();
   },
 
@@ -55,6 +68,11 @@ const client = new Client({
 
   onWebSocketClose: async (event) => {
     console.warn("🔌 WebSocket connection closed", event);
+
+    if (pingIntervalId) {
+      clearInterval(pingIntervalId);
+      pingIntervalId = null;
+    }
 
     if (event.code === 1002 || event.reason.includes("token")) {
       console.log(

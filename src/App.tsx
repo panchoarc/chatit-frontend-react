@@ -1,7 +1,7 @@
 import { AuthProvider } from "@/features/auth/hooks/AuthContext";
+import { ChatProvider } from "@/features/chat/context/ChatContext";
 import { BrowserRouter } from "react-router";
 import { UserProvider } from "./features/user/hooks/UserContext";
-import { ChatProvider } from "@/features/chat/context/ChatContext";
 
 import { Toaster } from "@/shared/ui/sonner";
 
