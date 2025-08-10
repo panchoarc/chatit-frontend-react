@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router";
 
 import { getDefaultRouteByRole } from "@/shared/utils/roleRedirect";
 import { useUser } from "@/features/user/hooks/UserContext";
+import WebSocketClientInstance from "@/features/chat/config/WebSocketClient";
 
 interface AuthContextType {
   token: string | null;
@@ -54,12 +55,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const user = profileResponse;
     setProfile(user);
     const role = user.roles ?? "guest";
+    WebSocketClientInstance.connect();
     const redirectPath = location.state?.from || getDefaultRouteByRole(role);
 
     navigate(`${redirectPath}`, { replace: true });
   };
   const logout = async () => {
     await AuthService.logout();
+    WebSocketClientInstance.disconnect();
     setToken(null);
     setProfile(null);
     localStorage.removeItem("access_token");
