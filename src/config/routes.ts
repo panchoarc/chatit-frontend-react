@@ -1,6 +1,6 @@
 import adminRoutes from "@/features/admin/routes";
 import authRoutes from "@/features/auth/routes";
-import chatRoutes from "@/features/chat/routes";
+import userRoutes from "@/features/user/routes";
 import Home from "@/features/user/pages/Home";
 
 import AdminLayout from "@/features/admin/layouts/AdminLayout";
@@ -12,7 +12,7 @@ const guestRoutes: Route[] = [{ path: "/", component: Home }];
 
 const routes = {
   admin: [...adminRoutes, ...authRoutes],
-  user: [...chatRoutes, ...authRoutes],
+  user: [...userRoutes, ...authRoutes],
   guest: [...guestRoutes, ...authRoutes],
   common: [...authRoutes],
 };
