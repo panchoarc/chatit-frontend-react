@@ -27,7 +27,6 @@ const isFile = (content: string): boolean => {
   return extensions.some((ext) => content.toLowerCase().includes(ext));
 };
 const getPreviewText = (content: string): string => {
-  console.log("CONTENT: ", content);
   if (!content) return "";
 
   if (isFile(content)) {
