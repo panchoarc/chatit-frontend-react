@@ -46,6 +46,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ chat, currentUserId }) => {
           currentUserId={currentUserId}
           currentUserName={currentUserName}
           onSendMessage={sendChatMessage}
+          members={members}
         />
       </div>
     </div>

@@ -45,10 +45,22 @@ export const getChatMessages = async (
   }
 };
 
+export const createNewChat = async (chat: any) => {
+  try {
+    const response = await instance.post(`/conversations`, chat);
+
+    const { data } = response.data;
+    return data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 const ConversationService = {
   getUserConversations,
   getChatMembers,
   getChatMessages,
+  createNewChat,
 };
 
 export default ConversationService;

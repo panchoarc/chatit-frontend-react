@@ -7,12 +7,14 @@ type ChatSidebarProps = {
   chatList: Chat[];
   activeChat: Chat | null;
   onMarkAsRead: (chatId: number) => void;
+  currentUserId: string;
 };
 
 const ChatSidebar = ({
   chatList,
   activeChat,
   onMarkAsRead,
+  currentUserId,
 }: ChatSidebarProps) => {
   const { setActiveChat } = useChatContext();
   const handleSelect = (chat: Chat) => {
@@ -24,7 +26,7 @@ const ChatSidebar = ({
 
   return (
     <aside className="hidden sm:flex w-1/4 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-col">
-      <ChatSidebarHeader />
+      <ChatSidebarHeader currentUserId={currentUserId} />
 
       <div className="flex-1 overflow-y-auto scrollbar-hidden">
         <ChatList

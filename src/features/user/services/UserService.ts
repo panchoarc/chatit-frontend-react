@@ -25,10 +25,20 @@ const getUserStatus = async (username) => {
     console.error(error);
   }
 };
+
+const getUsers = async () => {
+  try {
+    const response = await instance.get(`/users`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 const UserService = {
   getProfile,
   updateProfile,
   getUserStatus,
+  getUsers,
 };
 
 export default UserService;

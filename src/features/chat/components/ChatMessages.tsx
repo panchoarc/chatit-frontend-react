@@ -3,6 +3,8 @@ import { ScrollToBottomButton } from "@/features/chat/components/ScrollToBottomB
 import { useScrollManager } from "@/features/chat/hooks/useScrollManager";
 import type { Member, Message } from "@/features/chat/types/types";
 
+import { formatDateKey, humanizeDate } from "@/features/chat/utils/dateUtils";
+
 type ChatMessagesProps = {
   messages: Message[];
   currentUserId: string;
@@ -21,7 +23,7 @@ const getSenderName = (
   return member ? `${member.firstName} ${member.lastName}` : senderId;
 };
 
-export const ChatMessages = ({
+const ChatMessages = ({
   messages,
   currentUserId,
   members,
@@ -31,6 +33,12 @@ export const ChatMessages = ({
   const { containerRef, bottomRef, autoScroll, handleScroll, scrollToBottom } =
     useScrollManager({ messages, loadMore, hasMore });
 
+  let lastDate: string | null = null;
+
+  const membersMap: Record<string, Member> = {};
+  members.forEach((m) => {
+    membersMap[m.keycloakId] = m;
+  });
   return (
     <div className="relative h-full">
       <div
@@ -38,14 +46,30 @@ export const ChatMessages = ({
         onScroll={handleScroll}
         className="h-full overflow-y-auto scroll-smooth scrollbar-hidden p-4 space-y-4 bg-white dark:bg-black"
       >
-        {messages.map((msg) => (
-          <MessageBubble
-            key={msg.id}
-            message={msg}
-            isMe={msg.senderId === currentUserId}
-            senderName={getSenderName(msg.senderId, currentUserId, members)}
-          />
-        ))}
+        {messages.map((msg) => {
+          const dateKey = formatDateKey(msg.createdAt);
+          const showDateSeparator = dateKey !== lastDate;
+          lastDate = dateKey;
+
+          return (
+            <div key={msg.id}>
+              {showDateSeparator && (
+                <div className="text-center my-4">
+                  <span className="text-xs px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-300 shadow-sm">
+                    {humanizeDate(msg.createdAt)}
+                  </span>
+                </div>
+              )}
+
+              <MessageBubble
+                message={msg}
+                isMe={msg.senderId === currentUserId}
+                senderName={getSenderName(msg.senderId, currentUserId, members)}
+                membersMap={membersMap}
+              />
+            </div>
+          );
+        })}
         <div ref={bottomRef} />
       </div>
 
@@ -53,4 +77,5 @@ export const ChatMessages = ({
     </div>
   );
 };
+
 export default ChatMessages;

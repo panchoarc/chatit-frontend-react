@@ -36,3 +36,24 @@ export function formatLastSeen(date: Date): string {
 
   return `el ${format(date, "dd/MM/yyyy 'a las' HH:mm", { locale: es })}`;
 }
+
+export function formatDateKey(date: string | Date): string {
+  const d = new Date(date);
+  return d.toISOString().split("T")[0]; // "2025-08-20"
+}
+
+export function humanizeDate(date: string): string {
+  const d = new Date(date);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  if (d.toDateString() === today.toDateString()) return "Hoy";
+  if (d.toDateString() === yesterday.toDateString()) return "Ayer";
+
+  return d.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}

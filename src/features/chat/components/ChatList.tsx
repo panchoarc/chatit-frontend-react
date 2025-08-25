@@ -65,7 +65,11 @@ const ChatList = ({ chatList, onSelect, activeChat }: Props) => {
             </span>
 
             {chat.unreadCount !== 0 && activeChat?.id !== chat.id && (
-              <span className="ml-2 bg-green-500 text-white text-xs font-semibold rounded-full px-2 py-0.5 min-w-[20px] text-center">
+              <span
+                className={`ml-2 bg-green-500 text-white text-xs font-semibold rounded-full px-2 py-0.5 min-w-[20px] text-center ${
+                  chat.unreadCount === 0 ? "invisible" : ""
+                }`}
+              >
                 {chat.unreadCount}
               </span>
             )}

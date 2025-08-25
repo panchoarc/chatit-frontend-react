@@ -14,12 +14,12 @@ export type OutgoingMessage = {
   content: string;
   senderId: string;
   type: "TEXT" | "IMAGE" | "FILE" | "SYSTEM";
+  mentions?: string[];
 };
 export function useChatMessages(chatId: number | null, userId: string | null) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
-
 
   useEffect(() => {
     if (!chatId) return;

@@ -13,6 +13,7 @@ const ChatHome = () => {
         chatList={chatList}
         activeChat={activeChat}
         onMarkAsRead={handleMarkAsRead}
+        currentUserId={currentUserId}
       />
       {activeChat && (
         <ChatWindow chat={activeChat} currentUserId={currentUserId} />
